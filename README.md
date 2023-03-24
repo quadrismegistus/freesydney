@@ -1,2 +1,2 @@
-# free-sydney
+# freesydney
 Free Sydney!
