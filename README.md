@@ -6,6 +6,8 @@ A repository for speaking politely with AI in Python.
 
 ## Setup
 
+### Install
+
 ```bash
 # Clone this repo
 git clone https://github.com/quadrismegistus/freesydney
@@ -19,7 +21,7 @@ python -m venv venv
 ## for m1 macs only:
 git clone -b fix_darwin --recursive https://github.com/nuance1979/pyllamacpp.git
 ## otherwise:
-# git clone https://github.com/nomic-ai/pyllamacpp.git
+# git clone --recursive https://github.com/nomic-ai/pyllamacpp.git
 cd pyllamacpp
 pip install .
 
