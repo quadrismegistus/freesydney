@@ -70,8 +70,6 @@ def download(url, filename=False, verbose = False, desc=None):
 
 
 
-from io import StringIO 
-import sys
 class Capturing(list):
     def __enter__(self):
         self._stdout = sys.stdout

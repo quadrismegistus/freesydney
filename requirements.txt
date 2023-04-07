@@ -1,2 +1,6 @@
 # pyllamacpp
 tqdm
+ipython
+jupyterlab
+# pandas
+# networkx
