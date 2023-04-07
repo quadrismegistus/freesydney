@@ -10,26 +10,22 @@ A repository for speaking politely with AI in Python.
 
 ```bash
 # Clone this repo
-git clone https://github.com/quadrismegistus/freesydney
-cd freesydney
+git clone https://github.com/quadrismegistus/freesydney && cd freesydney
 
 # Setup a virtual environment
-python -m venv venv
-. venv/bin/activate
+python -m venv venv && . venv/bin/activate
+
+# update pip and install requirements
+pip install -U pip wheel && pip install -r requirements.txt
 
 # Install pyllamacpp from source
-## for m1 macs only:
-git clone -b fix_darwin --recursive https://github.com/nuance1979/pyllamacpp.git
-## otherwise:
-# git clone --recursive https://github.com/nomic-ai/pyllamacpp.git
-cd pyllamacpp
-pip install .
+git clone --recursive https://github.com/nomic-ai/pyllamacpp.git && cd pyllamacpp && pip install . && cd ..
+# or for m1 macs:
+# git clone -b fix_darwin --recursive https://github.com/nuance1979/pyllamacpp.git && cd pyllamacpp && pip install . && cd ..
 
-# come back up and install other requirements
-cd ..
-pip install -r requirements.txt
-
-# Run
+# Check: If no error here, pyllamacpp installed successfully
 python -i -c "from pyllamacpp.model import Model"
 ```
+
+### Getting models
 

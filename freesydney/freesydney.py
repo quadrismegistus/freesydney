@@ -1,6 +1,5 @@
 from .imports import *
 
-
 def download_model_orig(model_name:str=DEFAULT_MODEL, force:bool=False):
     model_fn = model_name+'.bin'
     model_fnfn = os.path.join(PATH_DATA, model_fn)
@@ -26,5 +25,26 @@ def convert_model_orig(model_name:str=DEFAULT_MODEL, force:bool=False, exec_name
         os.system(cmd)
     return newmodel_fn
 
-def download_converted_model(model_name:str=DEFAULT_MODEL, force:bool=False):
+def convert_unfiltered_model(): convert_model_orig(DEFAULT_MODEL_UNFILTERED)
+def convert_filtered_model(): convert_model_orig(DEFAULT_MODEL_FILTERED)
+
+
+
+def download_model_converted(model_name:str=DEFAULT_MODEL, force:bool=False):
     pass
+
+def get_model_converted(model_name:str=DEFAULT_MODEL, force:bool=False, force_convert:bool=False):
+    resfn = ''
+    if not force_convert: resfn = download_model_converted(model_name, force=force)
+    if not resfn: resfn = convert_model_orig(model_name, force=force)
+    return resfn
+
+
+@cache
+def get_model(model_name:str=DEFAULT_MODEL, **kwargs):
+    model_fn = get_model_converted(model_name)
+    model = None
+    #with Capturing() as o:
+    from pyllamacpp.model import Model
+    model = Model(model_fn, **kwargs)
+    return model

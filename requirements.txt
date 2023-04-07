@@ -1,2 +1,2 @@
 # pyllamacpp
-wget
+tqdm

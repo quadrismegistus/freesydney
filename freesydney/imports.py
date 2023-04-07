@@ -1,4 +1,5 @@
 import os,sys
+from functools import lru_cache as cache
 
 PATH_HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -13,8 +14,9 @@ paths=dict(
     data=PATH_DATA,
 )
 
-DEFAULT_MODEL = 'gpt4all-lora-unfiltered-quantized'
-
+DEFAULT_MODEL_UNFILTERED = 'gpt4all-lora-unfiltered-quantized'
+DEFAULT_MODEL_FILTERED = 'gpt4all-lora-quantized'
+DEFAULT_MODEL = DEFAULT_MODEL_UNFILTERED
 
 MODEL_URLS = {
     'gpt4all-lora-unfiltered-quantized':'https://the-eye.eu/public/AI/models/nomic-ai/gpt4all/gpt4all-lora-unfiltered-quantized.bin',
