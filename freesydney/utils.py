@@ -79,3 +79,16 @@ class Capturing(list):
         self.extend(self._stringio.getvalue().splitlines())
         del self._stringio    # free up some memory
         sys.stdout = self._stdout
+
+
+def printm(*x,joiner=' ',**y):
+    try:
+        from IPython.display import Markdown, display
+        display(Markdown(joiner.join(str(xx) for xx in x)))
+    except Exception:
+        print(*x,**y)
+
+def printm_blockquote(content, header):
+    o=f"#### {header}\n" if header else ""
+    o+=f"<blockquote>\n{content}\n</blockqute>"
+    printm(o)
