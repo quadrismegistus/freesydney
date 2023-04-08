@@ -21,7 +21,9 @@ class Conversation:
         if not agent in self.agents:
             self.agents.add(agent)
             if introduce:
-                self.lines.append(f'({agent.name.upper()} is {agent.desc}.)')
+                newline=f'({agent.name.upper()} is {agent.desc}.)'
+                self.lines.append(newline)
+                self.lines_full.append(newline)
                 self.introduced.add(agent)
         
     def has_introduced(self, someone):
@@ -43,48 +45,83 @@ class Conversation:
             self, 
             someone, 
             something=None, 
+            verbose_prompt=True,
+            verbose_response=True,
             how='',
-            ventriloquize_others=True,
-            generate=True, 
-            someone_replies=None,
             **kwargs):
-        
+        # get quotative
         quot = self.quotative(someone, how=how)
+
+        # if we don't know what this person is saying, generate it
         if not something:
+            # if verbose_prompt:
+                # printm_blockquote(str(self), 'Prompt')
+
             # we're predicting what someone says
-            new_new_lines = new_lines = self.generate(primer=self.sep + quot)
-            print('new_lines',new_lines)
-            if not ventriloquize_others:
-                new_new_lines = []
-                others = {ag for ag in self.agents if ag != someone}
-                for line in new_lines:
-                    if any(
-                        line.startswith(self.quotative(ag, introduce=False))
-                        for ag in others
-                    ):
-                        break
-                    new_new_lines.append(line)
-                    print('new_new_lines',new_new_lines)
+            primer = self.sep + quot
+            new_lines = self.generate(
+                primer=primer,
+                verbose_prompt=verbose_prompt,
+                verbose_response=False
+            )
+            new_new_lines = self.find_first_response(someone, new_lines)
+            not_new_new_lines = new_lines[len(new_new_lines):]
+            
+            if verbose_response:
+                # omd=f"""{self.sep.join(self.lines)}{self.sep}<b>{self.sep.join(new_new_lines)}</b>{self.sep}<i>{self.sep.join(not_new_new_lines)}</i>"""
+                newnew=self.sep.join(new_new_lines)
+                kindanew=self.sep.join(not_new_new_lines)
+                omd=f"{quot}<b>{newnew}</b>{self.sep}<i>{kindanew}</i>"
+                printm_blockquote(omd,'Response')
+
+            new_lines[0] = quot + new_lines[0]
+            new_new_lines[0] = quot + new_new_lines[0]
+            self.lines_full.extend(new_lines)
+            self.lines.extend(new_new_lines)
+            
+            
+
         else:
-            new_new_lines = new_lines = [f'{quot}{something}']
-        self.lines_full.extend(new_lines)
-        self.lines.extend(new_new_lines)
+            newline = f'{quot}{something}'
+            self.lines.append(newline)
+            self.lines_full.append(newline)
+        
+        # record utterance
         self.uttered.add(someone)
 
         
+    def find_first_response(self, someone, lines):
+        new_new_lines = []
+        others = {ag for ag in self.agents if ag is not someone}
+        for line in lines:
+            if any(
+                line.startswith(self.quotative(ag, introduce=False))
+                for ag in others
+            ):
+                break
+            new_new_lines.append(line)
+        return new_new_lines
 
 
+    def generate(
+            self, 
+            n_predict=55, 
+            primer='', 
+            verbose_prompt=True,
+            verbose_response=True,
+            **kwargs):
+        
+        prompt = str(self) + primer
 
-    def generate(self, n_predict=55, primer='', **kwargs):
-        old = str(self)
-        prompt = old + primer
-        response = generate(prompt, n_predict=n_predict, **kwargs)
-        print(f'RESPONSE:::\n{response}')
-        new_in_response = response.split(old,1)[-1]
-        # return new_in_response
-        new_lines = new_in_response.split(self.sep)
+        response = generate(
+            prompt, 
+            n_predict=n_predict, 
+            verbose_prompt=verbose_prompt,
+            verbose_response=verbose_response, 
+            **kwargs
+        )
+        new_lines = [x for x in response.split(self.sep) if x]
         return new_lines
-        # self.lines.extend([x for x in new_lines if x.strip()])
 
 
         
