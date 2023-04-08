@@ -3,3 +3,4 @@ pyllamacpp
 *.pyc
 .ipynb_checkpoints
 .DS_Store
+bak

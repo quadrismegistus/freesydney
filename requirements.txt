@@ -4,3 +4,4 @@ ipython
 jupyter
 # pandas
 # networkx
+unidecode

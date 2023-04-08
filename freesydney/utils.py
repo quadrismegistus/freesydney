@@ -88,7 +88,7 @@ def printm(*x,joiner=' ',**y):
     except Exception:
         print(*x,**y)
 
-def printm_blockquote(content, header):
+def printm_blockquote(content, header = ''):
     o=f"#### {header}\n" if header else ""
     o+=f"<blockquote>\n{content}\n</blockqute>"
     printm(o)

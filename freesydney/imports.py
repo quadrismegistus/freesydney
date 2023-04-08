@@ -36,5 +36,19 @@ CONVERTED_MODEL_URLS = {
 TOKENIZER_URL = 'https://huggingface.co/decapoda-research/llama-7b-hf/resolve/main/tokenizer.model'
 TOKENIZER_PATH = os.path.join(PATH_DATA,'tokenizer.model')
 
+
+
+
+
+DEFAULT_PROMPT = ""
+DEFAULT_PROMPT_PREFIX=""
+DEFAULT_PROMPT_SUFFIX=""
+
+
+
+
 from .utils import *
 from .inithelp import *
+from .models import *
+from .convo import *
+from .agent import *
