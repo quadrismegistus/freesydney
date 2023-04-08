@@ -51,6 +51,6 @@ def generate(
     true_res = res.split(prompt,1)[-1]
     
     if verbose_response:
-        printm_blockquote(f'{prompt} <b>{true_res}</b>', 'Response')
+        printm_blockquote(f'{prompt}<b>{true_res}</b>', 'Response')
     
     return true_res if not keep_prompt else res

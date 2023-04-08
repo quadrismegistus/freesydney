@@ -5,3 +5,4 @@ jupyter
 # pandas
 # networkx
 unidecode
+markdown2

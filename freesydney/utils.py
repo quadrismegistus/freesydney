@@ -90,5 +90,34 @@ def printm(*x,joiner=' ',**y):
 
 def printm_blockquote(content, header = ''):
     o=f"#### {header}\n" if header else ""
-    o+=f"<blockquote>\n{content}\n</blockqute>"
+    o+=f"<blockquote>\n\n{content}\n\n</blockqute>"
     printm(o)
+
+
+
+
+
+
+def extend_sticky(l1, l2):
+    if not l2: return l1
+    if l1: 
+        l1[-1] += l2[0]
+        l1.extend(l2[1:])
+    else:
+        l1.extend(l2)
+    return l1
+
+# assert extend_sticky(
+#     [
+#         'ME: Hello!',
+#         'YOU: '
+#     ], 
+#     [
+#         'Goodbye!', 
+#         'ME: Eh?'
+#     ]
+# ) == [
+#     'ME: Hello!', 
+#     'YOU: Goodbye!', 
+#     'ME: Eh?'
+# ]
