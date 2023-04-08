@@ -1,6 +1,6 @@
 # pyllamacpp
 tqdm
 ipython
-jupyterlab
+jupyter
 # pandas
 # networkx

@@ -13,7 +13,7 @@ def get_model(model_name:str=DEFAULT_MODEL, **kwargs):
     model = Model(model_fn, **kwargs)
     return model
 
-DEFAULT_PROMPT = """Complete the following dialogue between ME and YOU.\n\n"""
+DEFAULT_PROMPT = ""
 DEFAULT_PROMPT_PREFIX="\n\nME: "
 DEFAULT_PROMPT_SUFFIX="\n\nYOU: "
 DEFAULT_PROMPT_JOINER="\n"
@@ -58,17 +58,30 @@ class BaseModel:
         printm_blockquote(prompt_full, 'Prompt')
         
         # send prompt
-        res = self.pyllamacpp.generate(prompt_full, n_predict=n_predict, **kwargs)
+        try:
+            self.pyllamacpp.generate(prompt_full, n_predict=n_predict, **kwargs)
+        except Exception as e:
+            logger.error(e)
+        
+        # get res -- however far it got
+        res = self.pyllamacpp.res
+
         # find response part
         true_res = res.split(prompt_full,1)[-1].strip()
         #if true_res!=res: true_res = self.prompt_suffix + true_res
         # Did it go tooo far?
         true_true_res = true_res.split(self.prompt_prefix,1)[0]
-        printm_blockquote(true_true_res, 'Response')
         if true_true_res!=true_res:
-            printm_blockquote(true_res, 'Response (full)')
+            true_true_res_after = self.prompt_prefix + true_res.split(self.prompt_prefix,1)[-1]
+            omd = f'{prompt_full} <b>{true_true_res}</b> {true_true_res_after}'
+        else:
+            omd = f'{prompt_full} <b>{true_res}</b>'
+        
+        printm_blockquote(omd, 'Response')
+
         self.history = prompt_full + true_true_res.strip()
         self.full_history = prompt_full + true_res
+
         return true_true_res
 
     def sayto(self, prompt, **kwargs):

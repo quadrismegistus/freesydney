@@ -16,10 +16,10 @@ def download_tokenizer_orig(force:bool=False):
     return TOKENIZER_PATH
 
 def convert_model_orig(model_name:str=DEFAULT_MODEL, force:bool=False, exec_name:str='pyllamacpp-convert-gpt4all'):
-    model_fn = download_model_orig(model_name)
-    tokenizer_fn = download_tokenizer_orig()
-    newmodel_fn = os.path.splitext(model_fn)[0] + '.ggml' + os.path.splitext(model_fn)[1]
+    newmodel_fn = os.path.join(PATH_DATA, model_name+'.ggml.bin')
     if force or not os.path.exists(newmodel_fn):
+        model_fn = download_model_orig(model_name)
+        tokenizer_fn = download_tokenizer_orig()    
         cmd=f'{exec_name} {model_fn} {tokenizer_fn} {newmodel_fn}'
         print('>>',cmd)
         os.system(cmd)
@@ -31,6 +31,7 @@ def convert_filtered_model(): convert_model_orig(DEFAULT_MODEL_FILTERED)
 
 
 def download_model_converted(model_name:str=DEFAULT_MODEL, force:bool=False):
+    # @TODO
     pass
 
 def get_model_converted(model_name:str=DEFAULT_MODEL, force:bool=False, force_convert:bool=False):
