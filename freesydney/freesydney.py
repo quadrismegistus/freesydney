@@ -59,12 +59,13 @@ class BaseModel:
         
         # send prompt
         try:
-            self.pyllamacpp.generate(prompt_full, n_predict=n_predict, **kwargs)
+            res = self.pyllamacpp.generate(prompt_full, n_predict=n_predict, **kwargs)
         except Exception as e:
+            res = self.pyllamacpp.res
             logger.error(e)
         
         # get res -- however far it got
-        res = self.pyllamacpp.res
+        
 
         # find response part
         true_res = res.split(prompt_full,1)[-1].strip()
