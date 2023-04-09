@@ -1,6 +1,8 @@
 from .imports import *
 
-class Agent:
+
+
+class AgentModel:
     def __init__(self, name, desc = '', **kwargs):
         for k,v in kwargs.items(): setattr(self,k,v)
         self.name = name
@@ -65,8 +67,22 @@ class Agent:
         return convo.says(self, something=something, **kwargs)
     
     
-class Human(Agent):
-    pass
+class HumanModel(AgentModel): pass
+class AIModel(AgentModel): pass
 
-class AI(Agent):
-    pass
+
+
+
+def Agent(agent,*x,**y): 
+    if issubclass(type(agent), AgentModel): 
+        return agent
+    elif type(agent)==str:
+        return get_agent_model(agent.upper().strip(), *x, **y)
+
+
+@cache
+def get_agent_model(agent, *x, **y):
+    return AgentModel(agent, *x, **y)
+
+Human = Agent
+AI = Agent
