@@ -63,8 +63,14 @@ class Speeches(UserList):
             self.string+=speech.data
         
     def extend(self,speeches):
-        for speech in speeches:
-            self.add_speech(speech)
+        already_done = any([self.has_speech(sp) for sp in speeches])
+        if already_done: return
+
+        for i,speech in enumerate(speeches):
+            if not i and not speech.is_valid:
+                self.data[-1] += speeches[0]
+            else:
+                self.add_speech(speech)
 
     def _repr_html_(self):
         selfmd = '\n\n'.join(utt._repr_html_() for utt in self)

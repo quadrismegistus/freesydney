@@ -8,7 +8,7 @@ class Conversation:
         self.agents = set(agents)
         self.sep = sep
         self.system_prompt = system_prompt
-        self.speeches = Speeches()
+        self.speeches = Speeches(_convo=self)
         self.introduced = set()
         self.genstr = ''
 
@@ -84,10 +84,11 @@ Dialogue:
             
         if genstr:
             gen_dial = Speeches.parse(genstr)
+            gen_dial._convo = self
             if save: gen_dial.save()
             return gen_dial
         
-        return Speeches()
+        return Speeches(_convo=self)
         
     def generate(self, save=False, **kwargs):
         return self.generate_dialogue(save=save, **kwargs)

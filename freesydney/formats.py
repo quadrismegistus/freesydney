@@ -38,7 +38,9 @@ class ScriptFormat(TextFormat):
     
     def get_who_what_how(target_string):
         # This regular expression pattern matches "SPEAKER (stage_direction): " followed by any non-digit character.
-        pattern = r'(?P<who>[A-Za-z]+)(?:\s+\((?P<how>[^)]+)\))?:\s+(?P<what>[^\d]+)'
+        #pattern = r'(?P<who>[A-Za-z]+)(?:\s+\((?P<how>[^)]+)\))?:\s+(?P<what>[^\d]+)'
+        pattern = r'(?P<who>[A-Za-z]+(?:\s+[A-Za-z]+)*)(?:\s+\((?P<how>[^)]+)\))?:\s+(?P<what>[^\d]+)'
+
 
         # Use the finditer method to find all matches of the pattern in the target string.
         matches = re.finditer(pattern, target_string)
