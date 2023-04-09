@@ -79,7 +79,7 @@ Dialogue:
         
     def get_prompt(self,
             for_agent=None,
-            follow_with_sep=True,
+            follow_with_sep=False,
             **kwargs):
         lines = [self.get_system_prompt()]
         for utter in self.dialogue:
@@ -117,6 +117,10 @@ Dialogue:
         
     def generate(self, save=True, **kwargs):
         return self.generate_dialogue(save=save, **kwargs)
+    gen = generate
+    
+    def gensave(self, save=True, **kwargs):
+        return self.generate(save=save, **kwargs)
     
     def extend_dialogue(self, other_list):
         for utt in other_list:
@@ -149,7 +153,7 @@ Dialogue:
                     who = whohow.strip()
                     how = ''
             
-            if who and what.strip() and what.strip()[-1] in sentence_enders:
+            if who and what.strip():# and what.strip()[-1] in sentence_enders:
                 u = Utterance(
                     who=self.get_agent(who),
                     what=what.strip(),

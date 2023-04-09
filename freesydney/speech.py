@@ -17,7 +17,7 @@ class Utterance:
 
     def _repr_html_(self):
         how=f' (<i>{self.how}</i>)' if self.how else ''
-        o = f'<li class="speech"><b>{self.who.name}</b>{how}: {self.what}</li>'
+        o = f'<li class="speech" style="margin-bottom:1em;"><b>{self.who.name.upper()}{how}</b>: {self.what}</li>'
         return o
 
 class UtteranceList(UserList):

@@ -20,7 +20,7 @@ def generate(
         verbose_response=True,
         model_name=DEFAULT_MODEL,
         model_opts={},
-        n_predict=100,
+        n_predict=66,
         keep_prompt=False,
         **generate_opts
     ):
