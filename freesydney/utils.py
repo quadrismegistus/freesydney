@@ -132,3 +132,29 @@ def extend_sticky(l1, l2):
 #     'YOU: Goodbye!', 
 #     'ME: Eh?'
 # ]
+
+
+
+
+def find_sentence_offsets(target_string):
+    # This regular expression pattern will match sentence-ending punctuation followed by whitespace or the end of the string.
+    pattern = r'(?<=[.!?])\s+|\Z'    
+    # Initialize the list of sentence offsets with the starting offset of 0.
+    sentence_offsets = []
+    # Iterate over matches of the pattern in the target string.
+    for match in re.finditer(pattern, target_string):
+        # Calculate the offset for the next sentence.
+        next_offset = match.end()
+        # Add the next offset to the list of sentence offsets.
+        sentence_offsets.append(next_offset)
+    return sentence_offsets[:-1]  # Exclude the last offset, which is the end of the string.
+
+def tokenize_sentences(string):
+    offsets = find_sentence_offsets(string) + [None]
+    start = 0
+    o = []
+    for offset in offsets:
+        sent = string[start:offset]
+        start = offset
+        o.append(sent)
+    return o

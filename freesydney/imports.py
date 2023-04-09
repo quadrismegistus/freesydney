@@ -10,7 +10,8 @@ try:
 except Exception:
     pass
 
-from collections import UserList
+from collections import UserList, UserDict, UserString
+import re
 sentence_enders={'.','?','!','—','–'}
 
 PATH_HERE = os.path.abspath(os.path.dirname(__file__))
