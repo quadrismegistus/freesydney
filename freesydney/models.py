@@ -24,8 +24,12 @@ def generate(
         keep_prompt=False,
         **generate_opts
     ):
+    global QUERY_NUM, QUERY_TIMESTAMP
+    QUERY_NUM+=1
+    QUERY_TIMESTAMP=time.time()
 
-    if verbose_prompt: printm_blockquote(prompt, 'Prompt')
+    if verbose_prompt:
+        printm_blockquote(prompt, f'Prompt (Q{QUERY_NUM}, {now(QUERY_TIMESTAMP)})')
 
     model = get_model(model_name, **model_opts)
     
@@ -51,8 +55,12 @@ def generate(
     true_res = res.split(prompt,1)[-1]
     
     if verbose_response:
-        # printm_blockquote(f'{prompt}<b>{true_res}</b>', 'Response')
-        # printm_blockquote(f'<b>{true_res}</b>', 'Response')
-        printm_blockquote(true_res, 'Response')
+        now=time.time()
+        try:
+            clear_output()
+            printm_blockquote(f'{prompt}<b>{true_res}</b>', f'Response (Q{QUERY_NUM}, {nowstr(QUERY_TIMESTAMP)}) [+{now-QUERY_TIMESTAMP:.1}s]')
+        except Exception as e:
+            logger.error(e)
+            pass
     
     return true_res if not keep_prompt else res

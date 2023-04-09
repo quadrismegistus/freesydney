@@ -92,24 +92,27 @@ Dialogue:
     @property
     def prompt(self): return self.get_prompt()
     
-    def generate_str(self, primer='', **kwargs):
-        prompt = self.get_prompt(**kwargs)
-        genstr=primer + generate(prompt + primer, verbose_response=False)
+    def generate_str(self, prompt='', primer='', **kwargs):
+        if not prompt: prompt = self.get_prompt(**kwargs)
+        genstr=primer + generate(prompt + primer, **kwargs)
         self.genstr = genstr
         return genstr
     
-    def generate_dialogue(self, primer='', next_speaker='', save=False, **kwargs):
+    def generate_dialogue(self, prompt='', primer='', next_speaker='', save=False, **kwargs):
         if not primer and next_speaker:
             primer=self.sep+self.get_agent(next_speaker).quotative()
+
+        # get prompt
+        if not prompt: prompt = self.get_prompt(**kwargs)
         
         genstr = self.generate_str(
-            primer=primer, 
-            verbose_response=False, 
+            prompt=prompt,
+            primer=primer,
             **kwargs
         )
             
         if genstr:
-            gen_dial = self.parse_lines(genstr, primer=primer)
+            gen_dial = self.parse_lines(genstr, primer=primer,prompt=prompt)
             if save: gen_dial.save()
             return gen_dial
         
@@ -118,6 +121,22 @@ Dialogue:
     def generate(self, save=True, **kwargs):
         return self.generate_dialogue(save=save, **kwargs)
     gen = generate
+
+    def generate_options(self, n=2, verbose = True, **kwargs):
+        kwargs['save']=False
+        opts = [
+            self.generate(**kwargs)
+            for i in range(n)
+        ]
+        if verbose:
+            try:
+                clear_output(wait=True)
+                for i,opt in enumerate(opts):
+                    printm(f'### Option {i+1}')
+                    display(opt)
+            except Exception:
+                pass
+        return opts
     
     def gensave(self, save=True, **kwargs):
         return self.generate(save=save, **kwargs)
@@ -131,7 +150,7 @@ Dialogue:
         if among_agents is None: among_agents = self.agents
         return any(line.startswith(ag.name.upper()) for ag in among_agents)
     
-    def parse_lines(self, string, verbose=True, primer=''):
+    def parse_lines(self, string, verbose=True, primer='',prompt=''):
         utters = UtteranceList()
         utters._convo = self
 
@@ -165,13 +184,19 @@ Dialogue:
                 nolines.append(line)
         
         # printm_blockquote(self.sep.join(olines), 'Response')
-        printm_blockquote_bi(
-            primer,
-            self.sep.join(olines)[len(primer):]+self.sep,
-            self.sep.join(nolines)+self.sep,
-            sep='',
-            header='Response'
-        )
+        # try:
+        #     clear_output(wait=True)
+
+        #     printm_blockquote_bi(
+        #         prompt + primer + self.sep,
+        #         self.sep.join(olines)+self.sep,
+        #         self.sep.join(nolines)+self.sep,
+        #         sep='',
+        #         header='Response'
+        #     )
+        # except Exception as e:
+        #     print('!!',e)
+        #     pass
 
         return utters
         

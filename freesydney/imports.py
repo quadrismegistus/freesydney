@@ -1,10 +1,14 @@
-import os,sys
+import os,sys,time
 from functools import lru_cache as cache
 from functools import cached_property
 from io import StringIO 
 import sys
 import logging
 logger = logging.getLogger()
+try:
+    from IPython.display import Markdown, display, clear_output, HTML
+except Exception:
+    pass
 
 from collections import UserList
 sentence_enders={'.','?','!','—','–'}
@@ -39,6 +43,8 @@ TOKENIZER_URL = 'https://huggingface.co/decapoda-research/llama-7b-hf/resolve/ma
 TOKENIZER_PATH = os.path.join(PATH_DATA,'tokenizer.model')
 
 
+QUERY_NUM = 0
+QUERY_TIMESTAMP = 0
 
 
 

@@ -12,6 +12,14 @@ def get_tqdm(*args,progress=True,**kwargs):
 def in_jupyter(): return sys.argv[-1].endswith('json')
 
 
+def nowstr(now=None):
+    import datetime as dt
+    if not now:
+        now=dt.datetime.now()
+    elif type(now) in [int,float,str]:
+        now=dt.datetime.fromtimestamp(now)
+
+    return '{0}-{1}-{2} {3}:{4}:{5}'.format(now.year,str(now.month).zfill(2),str(now.day).zfill(2),str(now.hour).zfill(2),str(now.minute).zfill(2),str(now.second).zfill(2))
 
 def ensure_dir(dirname):
     if not os.path.exists(dirname):
