@@ -57,6 +57,7 @@ def generate(
     if verbose_response:
         now=time.time()
         try:
+            clear_output(wait=True)
             printm_blockquote(f'{prompt}<b>{true_res}</b>', f'Response (Q{QUERY_NUM}, {nowstr(QUERY_TIMESTAMP)}) [+{round(now-QUERY_TIMESTAMP,1)}s]')
         except Exception as e:
             logger.error(e)

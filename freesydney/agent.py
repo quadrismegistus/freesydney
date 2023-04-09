@@ -9,10 +9,9 @@ class AgentModel:
         self.desc = desc
         self.syds = {}
     def __hash__(self):
-        return hash((self.name, self.desc))
+        return hash(self.name.upper())
     def __eq__(self, other):
-        return (self.name, self.desc) == (other.name, other.desc)
-    
+        return self.name.upper() == other.name.upper()
     def __str__(self):
         return self.namedesc
         

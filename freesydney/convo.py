@@ -5,19 +5,22 @@ def Convo(*x,**y): return Conversation(*x,**y)
 
 class Conversation:
     def __init__(self, *agents, sep='\n\n', system_prompt=''):
-        self.agents = set(agents)
         self.sep = sep
         self.system_prompt = system_prompt
         self.speeches = Speeches(_convo=self)
         self.introduced = set()
         self.genstr = ''
+        self.agents = set(agents)
+
+    def get_agents(self):
+        return set(self.agents) | {sp.who for sp in self.speeches if sp.who}
 
     def __str__(self):
         return self.prompt
     
     def _repr_html_(self, include_system=False):
         selfmd = self.speeches._repr_html_()
-        anames = ", ".join(agent.name for agent in self.agents)
+        anames = ", ".join(agent.name for agent in self.get_agents())
         return f'''<div style="border:1px solid gray; padding:0 0.75em;"><h3>Conversation with {anames}</h3>{selfmd}</div>'''
                 
     def get_system_prompt(self):
@@ -83,14 +86,14 @@ Dialogue:
         )
             
         if genstr:
-            gen_dial = Speeches.parse(genstr)
+            gen_dial = Speeches.from_string(genstr)
             gen_dial._convo = self
             if save: gen_dial.save()
             return gen_dial
         
         return Speeches(_convo=self)
         
-    def generate(self, save=False, **kwargs):
+    def generate(self, save=True, **kwargs):
         return self.generate_dialogue(save=save, **kwargs)
 
     def generate_options(self, n=2, verbose = True, **kwargs):
@@ -111,6 +114,9 @@ Dialogue:
     
     def gensave(self, **kwargs):
         kwargs['save']=True
+        return self.generate(**kwargs)
+    def genopt(self, **kwargs):
+        kwargs['save']=False
         return self.generate(**kwargs)
     
     

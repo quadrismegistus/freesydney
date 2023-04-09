@@ -24,7 +24,7 @@ class Speech(UserString):
         if self._convo is not None: 
             self._convo.speeches.add_speech(self)
     
-    def parse(string):
+    def from_string(string):
         from .formats import ScriptFormat
         res = ScriptFormat.parse_speech(string)
         if res is not None: return res
@@ -71,6 +71,16 @@ class Speeches(UserList):
                 self.data[-1] += speeches[0]
             else:
                 self.add_speech(speech)
+    
+    def __add__(self, other):
+        new = Speeches(
+            data=[x for x in self.data],
+            string = self.string,
+            sep = self.sep,
+            _convo = self._convo
+        )
+        new.extend(other)
+        return new
 
     def _repr_html_(self):
         selfmd = '\n\n'.join(utt._repr_html_() for utt in self)
@@ -88,7 +98,7 @@ class Speeches(UserList):
         if self._convo is not None:
             self._convo.speeches.extend(self)
 
-    def parse(string):
+    def from_string(string):
         from .formats import ScriptFormat
         res = ScriptFormat.parse_speeches(string)
         if res is not None: return res
