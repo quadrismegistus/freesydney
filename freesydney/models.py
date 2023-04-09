@@ -29,7 +29,7 @@ def generate(
     QUERY_TIMESTAMP=time.time()
 
     if verbose_prompt:
-        printm_blockquote(prompt, f'Prompt (Q{QUERY_NUM}, {now(QUERY_TIMESTAMP)})')
+        printm_blockquote(prompt, f'Prompt (Q{QUERY_NUM}, {nowstr(QUERY_TIMESTAMP)})')
 
     model = get_model(model_name, **model_opts)
     
@@ -57,8 +57,7 @@ def generate(
     if verbose_response:
         now=time.time()
         try:
-            clear_output()
-            printm_blockquote(f'{prompt}<b>{true_res}</b>', f'Response (Q{QUERY_NUM}, {nowstr(QUERY_TIMESTAMP)}) [+{now-QUERY_TIMESTAMP:.1}s]')
+            printm_blockquote(f'{prompt}<b>{true_res}</b>', f'Response (Q{QUERY_NUM}, {nowstr(QUERY_TIMESTAMP)}) [+{round(now-QUERY_TIMESTAMP,1)}s]')
         except Exception as e:
             logger.error(e)
             pass

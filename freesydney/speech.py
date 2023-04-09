@@ -20,6 +20,11 @@ class Utterance:
         o = f'<li class="speech" style="margin-bottom:1em;"><b>{self.who.name.upper()}{how}</b>: {self.what}</li>'
         return o
 
+    def save(self):
+        if hasattr(self,'_convo') and self._convo is not None:
+            self._convo.extend_dialogue([self])
+    
+
 class UtteranceList(UserList):
     def save(self):
         if hasattr(self,'_convo') and self._convo is not None:
