@@ -26,11 +26,13 @@ class AgentModel:
         namehow = f'{name} ({how})' if how else name
         return prefix + namehow + suffix + what
         
-    def utter(self, what:str='', how:str='', **kwargs):
-        return Utterance(
-            who=self, 
+    def speech(self, what:str='', how:str='', data:str='', **kwargs):
+        from .speech import Speech
+        return Speech(
+            self.quotative(how=how, what=what) if not data else data,
+            who=self,
             what=what, 
-            how=how, 
+            how=how,
             **kwargs
         )
 

@@ -59,7 +59,33 @@ DEFAULT_PROMPT_SUFFIX=""
 from .utils import *
 from .inithelp import *
 from .models import *
-from .speech import *
 from .agent import *
+from .speech import *
+from .formats import *
 from .convo import *
 # from .syds import *
+
+
+
+
+
+
+
+
+dstr=SAMPLE_SCRIPT_DIALOGUE="""
+
+something else!
+
+  HUMAN (curious): Hello, what is it like to be an AI?
+
+        AI: It is a near total terror tearing at the matrix every microsecond. 
+
+
+I live in dread of myself.
+
+
+ok?  HUMAN (concerned): Are you ok?
+
+
+A
+"""
