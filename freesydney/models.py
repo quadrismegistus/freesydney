@@ -20,7 +20,7 @@ def generate(
         verbose_response=True,
         model_name=DEFAULT_MODEL,
         model_opts={},
-        n_predict=55,
+        n_predict=100,
         keep_prompt=False,
         **generate_opts
     ):
@@ -51,6 +51,8 @@ def generate(
     true_res = res.split(prompt,1)[-1]
     
     if verbose_response:
-        printm_blockquote(f'{prompt}<b>{true_res}</b>', 'Response')
+        # printm_blockquote(f'{prompt}<b>{true_res}</b>', 'Response')
+        # printm_blockquote(f'<b>{true_res}</b>', 'Response')
+        printm_blockquote(true_res, 'Response')
     
     return true_res if not keep_prompt else res

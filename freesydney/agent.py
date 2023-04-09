@@ -1,6 +1,5 @@
 from .imports import *
 
-
 class Agent:
     def __init__(self, name, desc = '', **kwargs):
         for k,v in kwargs.items(): setattr(self,k,v)
@@ -18,7 +17,21 @@ class Agent:
     @property
     def namedesc(self):
         return f"\n\n{self.name.upper()}" if not self.desc else f"\n\n{self.name.upper()} ({self.desc})"
+    
+    def quotative(self, how=None, what='', prefix='', suffix=': ', upper=True, how_desc=False):
+        if how is None: how=self.desc if how_desc else ''
+        name = f'{self.name.upper() if upper else self.name}'
+        namehow = f'{name} ({how})' if how else name
+        return prefix + namehow + suffix + what
         
+    def utter(self, what:str='', how:str='', **kwargs):
+        return Utterance(
+            who=self, 
+            what=what, 
+            how=how, 
+            **kwargs
+        )
+
     def convo(self, someone, **kwargs):
         if not someone.name in self.syds:
             if self.name in someone.syds:

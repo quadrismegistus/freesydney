@@ -94,6 +94,9 @@ def printm_blockquote(content, header = ''):
     printm(o)
 
 
+def printm_blockquote_bi(pre='', bold='', ital='', sep='', header=''):
+    omd=f"{pre}{sep}<b>{bold}</b>{sep}<i>{ital}</i>{sep}"
+    printm_blockquote(omd,header)
 
 
 

@@ -6,6 +6,8 @@ import sys
 import logging
 logger = logging.getLogger()
 
+from collections import UserList
+sentence_enders={'.','?','!','—','–'}
 
 PATH_HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -50,6 +52,7 @@ DEFAULT_PROMPT_SUFFIX=""
 from .utils import *
 from .inithelp import *
 from .models import *
-from .convo import *
+from .speech import *
 from .agent import *
+from .convo import *
 # from .syds import *
