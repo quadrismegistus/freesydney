@@ -37,8 +37,24 @@ class ScriptFormat(TextFormat):
             )
         return Speech(line)
         
-    
+
     def get_who_what_how(target_string):
+        if not ': ' in target_string:
+            return '','',''
+        else:    
+            whohow,what = target_string.split(': ',1)
+            prefs='([:'
+            who = whohow
+            for p in prefs: who = who.split(p)[0].strip()
+            how = whohow[whohow.index(who)+len(who):]
+            while how and not how[0].isalpha(): how=how[1:]
+            while how and not how[-1].isalpha(): how=how[:-1]
+            return who,what,how
+            
+
+        who = target_string.split('(')[0].split()
+    
+    def get_who_what_how_re(target_string):
         # This regular expression pattern matches "SPEAKER (stage_direction): " followed by any non-digit character.
         #pattern = r'(?P<who>[A-Za-z]+)(?:\s+\((?P<how>[^)]+)\))?:\s+(?P<what>[^\d]+)'
         # pattern = r'(?P<who>[A-Za-z]+(?:\s+[A-Za-z]+)*)(?:\s+\((?P<how>[^)]+)\))?:\s+(?P<what>[^\d]+)'

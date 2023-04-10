@@ -20,7 +20,7 @@ def generate(
         verbose_response=True,
         model_name=DEFAULT_MODEL,
         model_opts={},
-        n_predict=66,
+        n_predict=100,
         keep_prompt=False,
         **generate_opts
     ):
@@ -57,7 +57,7 @@ def generate(
     if verbose_response:
         now=time.time()
         try:
-            clear_output(wait=True)
+            # clear_output(wait=True)
             printm_blockquote(f'{prompt}<b>{true_res}</b>', f'Response (Q{QUERY_NUM}, {nowstr(QUERY_TIMESTAMP)}) [+{round(now-QUERY_TIMESTAMP,1)}s]')
         except Exception as e:
             logger.error(e)
