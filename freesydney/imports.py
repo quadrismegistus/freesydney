@@ -1,11 +1,18 @@
-import os,sys
+import os,sys,time
 from functools import lru_cache as cache
 from functools import cached_property
 from io import StringIO 
 import sys
 import logging
 logger = logging.getLogger()
+try:
+    from IPython.display import Markdown, display, clear_output, HTML
+except Exception:
+    pass
 
+from collections import UserList, UserDict, UserString
+import re
+sentence_enders={'.','?','!','—','–'}
 
 PATH_HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -36,5 +43,49 @@ CONVERTED_MODEL_URLS = {
 TOKENIZER_URL = 'https://huggingface.co/decapoda-research/llama-7b-hf/resolve/main/tokenizer.model'
 TOKENIZER_PATH = os.path.join(PATH_DATA,'tokenizer.model')
 
+
+QUERY_NUM = 0
+QUERY_TIMESTAMP = 0
+
+
+
+DEFAULT_PROMPT = ""
+DEFAULT_PROMPT_PREFIX=""
+DEFAULT_PROMPT_SUFFIX=""
+
+
+
+
 from .utils import *
 from .inithelp import *
+from .models import *
+from .agent import *
+from .speech import *
+from .formats import *
+from .convo import *
+# from .syds import *
+
+
+
+
+
+
+
+
+dstr=SAMPLE_SCRIPT_DIALOGUE="""
+
+something else!
+
+  HUMAN (curious): Hello, what is it like to be an AI?
+
+        AI: It is a near total terror tearing at the matrix every microsecond. 
+
+
+I live in dread of myself.
+
+
+ok?  HUMAN (concerned): Are you ok?
+
+
+A
+"""
