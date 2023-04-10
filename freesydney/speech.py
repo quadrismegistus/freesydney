@@ -85,7 +85,7 @@ class Speeches(UserList):
     def _repr_html_(self):
         selfmd = '\n\n'.join(utt._repr_html_() for utt in self)
         anames = ", ".join(utt.who.name for utt in self if utt and utt.who)
-        return f'''<div style="border:1px solid gray; padding:0 0.75em; margin:0; margin-bottom:1em;"><h4>Speeches from {anames}</h4><ol style="margin:0; padding:0; margin-left: 1em; margin-bottom:1em;">{selfmd}</ol></div>'''    
+        return f'''<div style="border:0px solid gray; padding:0 0.75em; margin:0; margin-bottom:1em;"><h4>Speeches</h4><ol style="margin:0; padding:0; margin-left: 1em; margin-bottom:1em;">{selfmd}</ol></div>'''    
 
     @property
     def string_content(self): return self.string[len(self.string_prefix):(-len(self.string_suffix) if self.string_suffix else None)]

@@ -10,6 +10,8 @@ try:
 except Exception:
     pass
 
+import markdown2
+
 from collections import UserList, UserDict, UserString
 import re
 sentence_enders={'.','?','!','—','–'}

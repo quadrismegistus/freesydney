@@ -18,17 +18,21 @@ class Conversation:
     def __str__(self):
         return self.prompt
     
-    def _repr_html_(self, include_system=False):
+    def _repr_html_(self, include_system=True):
         selfmd = self.speeches._repr_html_()
-        anames = ", ".join(agent.name for agent in self.get_agents())
-        return f'''<div style="border:1px solid gray; padding:0 0.75em;"><h3>Conversation with {anames}</h3>{selfmd}</div>'''
-                
+        sysmd = markdown2.markdown('\n\n'.join(self.get_dramatis_personae()))
+        # anames = ", ".join(agent.name for agent in self.get_agents())
+        return f'''<div style="border:1px solid gray; padding:0 0.75em;"><h3>Conversation</h3><h4>Dramatis Personae</h4>{sysmd}{selfmd}</div>'''
+
+    def get_dramatis_personae(self):
+        return [
+            f'* {agent.name.upper()}, {agent.desc}.' if agent.desc else f'* {agent.name.upper()}'
+            for agent in self.get_agents()
+        ]
+
     def get_system_prompt(self):
         dramatis_sep = "\n\n"
-        namedescs = [
-            f'* {agent.name.upper()}, {agent.desc}.' if agent.desc else f'* {agent.name.upper()}'
-            for agent in self.agents
-        ]
+        namedescs = self.get_dramatis_personae()
         # if len(namedescs)>1: namedescs[-1]='and '+namedescs[-1]
         ostr=f'''Dramatis Personae:
 
@@ -41,15 +45,24 @@ Dialogue:
 '''
         return ostr
     
-    def speech(self, 
-             who:'Agent', 
-             what:str, 
+    def speech(self,
+             line:str='', 
+             who:'Agent'='', 
+             what:str='', 
              save=True,
              how=None):
-        speech = Agent(who).speech(what, how)
+
+        if who and what and how:
+            speech = Agent(who).speech(what, how)
+        elif line:
+            speech = Speech.from_string(line)
         speech._convo = self
         if save: speech.save()
         return speech
+    
+    def parse(self, string):
+        speeches = Speeches.from_string(string)
+        self.speeches.extend(speeches)
         
     def get_prompt(self,
             for_agent=None,
