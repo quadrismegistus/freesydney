@@ -1,8 +1,83 @@
 from .imports import *
 
+def get_model_path(model_name=DEFAULT_MODEL):
+    return get_model_converted(model_name)
+
+
+
 
 @cache
 def get_model(model_name:str=DEFAULT_MODEL, **kwargs):
+    ## @HACK @FIX @TODO: force disable stderr output    
+    def donothing(*x,**y): pass
+    sys.stderr.write = donothing
+    ##
+
+    from llama_cpp import Llama
+    model_fn = get_model_converted(model_name)
+    return Llama(model_fn, **kwargs)
+
+
+def generate(
+        prompt,
+        stop=[],
+        verbose_prompt=True,
+        verbose_response=True,
+        model_name=DEFAULT_MODEL,
+        model_opts={},
+        n_predict=50,
+        keep_prompt=False,
+        **generate_opts
+    ):
+    global QUERY_NUM, QUERY_TIMESTAMP
+    QUERY_NUM+=1
+    QUERY_TIMESTAMP=time.time()
+
+    if verbose_prompt: printm_blockquote(prompt, f'Prompt (Q{QUERY_NUM}, {nowstr(QUERY_TIMESTAMP)})')
+    
+    model = get_model(model_name, **model_opts)
+    
+    def gen(prompt):
+        return model(
+            prompt,
+            max_tokens=n_predict,
+            stop = stop,
+            **generate_opts
+        )
+    
+    try:
+        resd = gen(prompt)
+    except UnicodeDecodeError as e:
+        try:
+            from unidecode import unidecode
+            resd = gen(unidecode(prompt))
+        except Exception as e:
+            logger.error(e)
+            # get res -- however far it got
+            # res = model.res #?
+            resd = {}
+    
+    resl = resd.get('choices',[])
+    res = resl[0]['text'] if resl else ''
+
+    # find response part
+    true_res = res.split(prompt,1)[-1]
+    
+    if verbose_response:
+        now=time.time()
+        try:
+            # clear_output(wait=True)
+            printm_blockquote(f'{prompt}<b>{true_res}</b>', f'Response (Q{QUERY_NUM}, {nowstr(QUERY_TIMESTAMP)}) [+{round(now-QUERY_TIMESTAMP,1)}s]')
+        except Exception as e:
+            logger.error(e)
+            pass
+    
+    return true_res if not keep_prompt else res
+
+
+
+@cache
+def get_model_pyllamacpp(model_name:str=DEFAULT_MODEL, **kwargs):
     model_fn = get_model_converted(model_name)
     ######
     ## @HACK @FIX @TODO:
@@ -14,7 +89,7 @@ def get_model(model_name:str=DEFAULT_MODEL, **kwargs):
     model = Model(model_fn, **kwargs)
     return model
 
-def generate(
+def generate_pyllamacpp(
         prompt,
         verbose_prompt=True,
         verbose_response=True,
@@ -64,3 +139,5 @@ def generate(
             pass
     
     return true_res if not keep_prompt else res
+
+generate = generate_pyllamacpp
